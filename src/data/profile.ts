@@ -421,7 +421,7 @@ const ru: SiteContent = {
     headline: "Fullstack QA Engineer",
     subheadline:
       "Автоматизация на Playwright и TypeScript — end-to-end и API-покрытие — вместе с глубоким ручным тестированием облачных, биллинговых и платёжных систем, где важны корректность, консистентность данных и граничные случаи.",
-    location: "Армения · удалённо",
+    location: "Удалённо",
     availability: "Открыт к предложениям (QA / QA Automation)",
     yearsInIt: "~10 лет в IT",
     yearsInQa: "~6 лет в QA",
@@ -459,7 +459,7 @@ const ru: SiteContent = {
     },
   ],
   skillGroups: [
-    { title: "Testing", note: "Здесь у меня больше всего глубины.", skills: [...skillTags.testing] },
+    { title: "Testing", note: "Моя самая сильная зона экспертизы.", skills: [...skillTags.testing] },
     {
       title: "Automation",
       note: "Развиваю — практический уровень, без многолетнего сеньорского опыта в продакшн-автоматизации.",
@@ -525,7 +525,7 @@ const ru: SiteContent = {
     },
     projectKinds: { Production: "Продакшн", Personal: "Личный", Concept: "Концепт" },
     contactLead:
-      "Нужен QA-инженер, который разбирается в системе, а не только в экранах? Я открыт к предложениям (QA / QA Automation).",
+      "Нужен QA-инженер, который понимает систему целиком, а не ограничивается проверкой интерфейса? Я открыт к предложениям (QA / QA Automation).",
     footer: { builtWith: "Сделано на React и TypeScript", backToTop: "Наверх ↑" },
     qa: {
       introBefore: "End-to-end ",
