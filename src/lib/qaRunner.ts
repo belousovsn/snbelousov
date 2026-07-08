@@ -14,10 +14,37 @@ export interface TestGroup {
   label: string;
   description: string;
   auth: boolean;
-  /** Test-type labels: e2e, api, integration, smoke, regression, component. */
+  /** Category id used to bucket groups in the UI (smoke, guest, authed, feature). */
+  category: string;
+  /** Human label for the category, supplied by the runner. */
+  categoryLabel: string;
+  /** Test-type labels: e2e, api, integration, smoke, regression, feature. */
   kinds: string[];
   /** Number of tests in the group (computed by the runner via --list). */
   count: number | null;
+}
+
+/**
+ * Bucket groups by category, preserving the runner's declaration order (which
+ * puts Smoke first). Older runners that don't send `category` fall back to a
+ * single untitled bucket, so the UI keeps working.
+ */
+export function groupByCategory(
+  groups: TestGroup[],
+): Array<{ id: string; label: string; groups: TestGroup[] }> {
+  const buckets: Array<{ id: string; label: string; groups: TestGroup[] }> = [];
+  const byId = new Map<string, { id: string; label: string; groups: TestGroup[] }>();
+  for (const g of groups) {
+    const id = g.category ?? "";
+    let bucket = byId.get(id);
+    if (!bucket) {
+      bucket = { id, label: g.categoryLabel ?? "", groups: [] };
+      byId.set(id, bucket);
+      buckets.push(bucket);
+    }
+    bucket.groups.push(g);
+  }
+  return buckets;
 }
 
 export type RunStatus =

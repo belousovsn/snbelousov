@@ -775,7 +775,7 @@
   padding: 0;
   margin: 0;
   display: grid;
-  gap: 0.6rem;
+  gap: 1.1rem;
 }
 
 .qa-groups legend {
@@ -786,6 +786,23 @@
   color: var(--ink-muted);
   margin-bottom: 0.6rem;
   padding: 0;
+}
+
+/* One bucket of groups under a category heading (Smoke, E2E, Feature…). */
+.qa-category {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.qa-category__label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  margin: 0;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--rule);
 }
 
 .qa-group {

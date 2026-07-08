@@ -9,6 +9,7 @@ import {
   streamUrl,
   reportUrl,
   formatTitle,
+  groupByCategory,
   type TestGroup,
   type TestResult,
   type RunSummary,
@@ -264,42 +265,49 @@ export default function QaLab() {
                 <div className="qa-controls">
                   <fieldset className="qa-groups" disabled={busy}>
                     <legend>{q.chooseGroup}</legend>
-                    {groups.map((g) => (
-                      <label
-                        key={g.id}
-                        className={`qa-group${selected === g.id ? " is-selected" : ""}`}
-                      >
-                        <input
-                          type="radio"
-                          name="qa-group"
-                          value={g.id}
-                          checked={selected === g.id}
-                          onChange={() => setSelected(g.id)}
-                        />
-                        <span className="qa-group__main">
-                          <span className="qa-group__label">
-                            {g.label}
-                            {typeof g.count === "number" && (
-                              <span className="qa-group__count">
-                                {q.testsCount(g.count)}
+                    {groupByCategory(groups).map((cat) => (
+                      <div key={cat.id} className="qa-category">
+                        {cat.label && (
+                          <p className="qa-category__label">{cat.label}</p>
+                        )}
+                        {cat.groups.map((g) => (
+                          <label
+                            key={g.id}
+                            className={`qa-group${selected === g.id ? " is-selected" : ""}`}
+                          >
+                            <input
+                              type="radio"
+                              name="qa-group"
+                              value={g.id}
+                              checked={selected === g.id}
+                              onChange={() => setSelected(g.id)}
+                            />
+                            <span className="qa-group__main">
+                              <span className="qa-group__label">
+                                {g.label}
+                                {typeof g.count === "number" && (
+                                  <span className="qa-group__count">
+                                    {q.testsCount(g.count)}
+                                  </span>
+                                )}
+                                {g.auth && (
+                                  <span className="qa-group__badge">{q.signsIn}</span>
+                                )}
                               </span>
-                            )}
-                            {g.auth && (
-                              <span className="qa-group__badge">{q.signsIn}</span>
-                            )}
-                          </span>
-                          <span className="qa-group__desc">{g.description}</span>
-                          {g.kinds.length > 0 && (
-                            <span className="qa-group__kinds">
-                              {g.kinds.map((k) => (
-                                <span key={k} className="qa-kind">
-                                  {k}
+                              <span className="qa-group__desc">{g.description}</span>
+                              {g.kinds.length > 0 && (
+                                <span className="qa-group__kinds">
+                                  {g.kinds.map((k) => (
+                                    <span key={k} className="qa-kind">
+                                      {k}
+                                    </span>
+                                  ))}
                                 </span>
-                              ))}
+                              )}
                             </span>
-                          )}
-                        </span>
-                      </label>
+                          </label>
+                        ))}
+                      </div>
                     ))}
                   </fieldset>
 
