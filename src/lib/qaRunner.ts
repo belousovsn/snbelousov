@@ -9,6 +9,15 @@ export const RUNNER_URL = (
   import.meta.env.VITE_RUNNER_URL ?? "http://localhost:8787"
 ).replace(/\/$/, "");
 
+/** One test of a group, as listed by the runner (`playwright test --list`). */
+export interface TestCase {
+  /** Playwright's stable test id; the only thing sent back to run it. */
+  id: string;
+  title: string;
+  /** Spec file and describe blocks, e.g. `auth/lobby.spec.ts › Multiplayer lobby`. */
+  context: string;
+}
+
 export interface TestGroup {
   id: string;
   label: string;
@@ -22,6 +31,24 @@ export interface TestGroup {
   kinds: string[];
   /** Number of tests in the group (computed by the runner via --list). */
   count: number | null;
+  /** The group's tests. Older runners don't send it. */
+  tests?: TestCase[];
+}
+
+/** Bucket a group's tests by spec file and describe, keeping the runner's order. */
+export function testsByContext(
+  tests: TestCase[],
+): Array<{ context: string; tests: TestCase[] }> {
+  const buckets: Array<{ context: string; tests: TestCase[] }> = [];
+  for (const t of tests) {
+    let bucket = buckets[buckets.length - 1];
+    if (!bucket || bucket.context !== t.context) {
+      bucket = { context: t.context, tests: [] };
+      buckets.push(bucket);
+    }
+    bucket.tests.push(t);
+  }
+  return buckets;
 }
 
 /**
@@ -74,6 +101,8 @@ export interface TestResult {
 export interface Run {
   id: string;
   group: string;
+  /** Set when the run was a single test. */
+  test?: { id: string; title: string } | null;
   status: RunStatus;
   startedAt: string;
   finishedAt: string | null;
@@ -119,13 +148,14 @@ export async function getRun(runId: string): Promise<Run> {
   return data.run;
 }
 
-export async function startRun(group: string): Promise<StartResult> {
+/** Start a whole group, or one of its tests when `test` is a test id. */
+export async function startRun(group: string, test?: string): Promise<StartResult> {
   let res: Response;
   try {
     res = await fetch(`${RUNNER_URL}/api/run`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ group }),
+      body: JSON.stringify(test ? { group, test } : { group }),
     });
   } catch {
     return { ok: false, status: 0, error: "The live runner is not reachable." };
