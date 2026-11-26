@@ -110,7 +110,10 @@ export interface UiStrings {
     chooseGroup: string;
     signsIn: string;
     testsCount: (n: number) => string;
+    chooseTest: string;
+    allTests: (n: number) => string;
     runIdle: string;
+    runOne: string;
     runStarting: string;
     runRunning: string;
     lastRun: string;
@@ -371,7 +374,7 @@ const en: SiteContent = {
       introBefore: "The Playwright end-to-end ",
       introLink: "test suite",
       introAfter:
-        " for one of my projects, run on demand against its live test environment. Select a group of tests to run and review the results, including the full Playwright report.",
+        " for one of my projects, run on demand against its live test environment. Select a group of tests, or a single test inside it, run it and review the results, including the full Playwright report.",
       openButton: "Open test runner",
       modalKicker: "Live test run",
       modalTitle: "Run the Playwright suite",
@@ -381,7 +384,10 @@ const en: SiteContent = {
       chooseGroup: "Choose a test group",
       signsIn: "signs in",
       testsCount: (n) => `${n} ${n === 1 ? "test" : "tests"}`,
+      chooseTest: "Test to run",
+      allTests: (n) => `All ${n} ${n === 1 ? "test" : "tests"} in the group`,
       runIdle: "Run tests ▶",
+      runOne: "Run test ▶",
       runStarting: "Starting…",
       runRunning: "Running…",
       lastRun: "Last run:",
@@ -405,7 +411,7 @@ const en: SiteContent = {
       rawOutput: "Raw output",
       live: "live",
       idleNote:
-        "Select a group and press Run tests. Tests execute on a server against the live app — results stream back here in real time.",
+        "Select a group and press Run tests. To see a result faster, pick a single test from the list in the group. Tests execute on a server against the live app — results stream back here in real time.",
       closeBusy: "running…",
       close: "close ✕",
     },
@@ -531,7 +537,7 @@ const ru: SiteContent = {
       introBefore: "End-to-end ",
       introLink: "набор тестов на Playwright",
       introAfter:
-        " для одного из моих проектов — запускается по запросу в его рабочем тестовом окружении. Выберите группу тестов, запустите её и посмотрите результаты, включая полный отчёт Playwright.",
+        " для одного из моих проектов — запускается по запросу в его рабочем тестовом окружении. Выберите группу тестов или один тест из неё, запустите и посмотрите результаты, включая полный отчёт Playwright.",
       openButton: "Открыть раннер тестов",
       modalKicker: "Запуск тестов вживую",
       modalTitle: "Запустить набор тестов Playwright",
@@ -541,7 +547,10 @@ const ru: SiteContent = {
       chooseGroup: "Выберите группу тестов",
       signsIn: "вход в аккаунт",
       testsCount: pluralTestsRu,
+      chooseTest: "Какой тест запустить",
+      allTests: (n) => `Вся группа: ${pluralTestsRu(n)}`,
       runIdle: "Запустить тесты ▶",
+      runOne: "Запустить тест ▶",
       runStarting: "Запуск…",
       runRunning: "Выполняется…",
       lastRun: "Последний прогон:",
@@ -565,7 +574,7 @@ const ru: SiteContent = {
       rawOutput: "Вывод",
       live: "вживую",
       idleNote:
-        "Выберите группу и нажмите «Запустить тесты». Тесты выполняются на сервере против рабочего приложения — результаты приходят сюда в реальном времени.",
+        "Выберите группу и нажмите «Запустить тесты». Чтобы увидеть результат быстрее, выберите в списке группы один тест. Тесты выполняются на сервере против рабочего приложения — результаты приходят сюда в реальном времени.",
       closeBusy: "идёт прогон…",
       close: "закрыть ✕",
     },

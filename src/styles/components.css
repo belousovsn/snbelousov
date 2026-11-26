@@ -884,6 +884,26 @@
   padding: 0.15em 0.45em;
 }
 
+/* Single-test picker inside the selected group card. */
+.qa-test-select {
+  margin-top: 0.45rem;
+  width: 100%;
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: var(--ink);
+  background: var(--paper-raised);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  padding: 0.4rem 0.5rem;
+  cursor: pointer;
+}
+
+.qa-test-select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
 .qa-actions {
   display: flex;
   flex-wrap: wrap;

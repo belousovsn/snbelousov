@@ -10,6 +10,7 @@ import {
   reportUrl,
   formatTitle,
   groupByCategory,
+  testsByContext,
   type TestGroup,
   type TestResult,
   type RunSummary,
@@ -27,6 +28,8 @@ export default function QaLab() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [groups, setGroups] = useState<TestGroup[]>([]);
   const [selected, setSelected] = useState<string>("");
+  // A test id inside the selected group; "" runs the whole group.
+  const [selectedTest, setSelectedTest] = useState<string>("");
   const [latest, setLatest] = useState<Run | null>(null);
   const [message, setMessage] = useState<string>("");
 
@@ -167,7 +170,7 @@ export default function QaLab() {
     setMessage("");
     setPhase("starting");
 
-    const result = await startRun(selected);
+    const result = await startRun(selected, selectedTest || undefined);
     if (result.ok) {
       attach(result.runId);
       return;
@@ -183,7 +186,7 @@ export default function QaLab() {
     }
     setMessage(result.error);
     setPhase("idle");
-  }, [selected, attach, q.msgInProgress]);
+  }, [selected, selectedTest, attach, q.msgInProgress]);
 
   const busy = phase === "starting" || phase === "running";
   const counts = tests.reduce(
@@ -280,7 +283,10 @@ export default function QaLab() {
                               name="qa-group"
                               value={g.id}
                               checked={selected === g.id}
-                              onChange={() => setSelected(g.id)}
+                              onChange={() => {
+                                setSelected(g.id);
+                                setSelectedTest("");
+                              }}
                             />
                             <span className="qa-group__main">
                               <span className="qa-group__label">
@@ -304,6 +310,25 @@ export default function QaLab() {
                                   ))}
                                 </span>
                               )}
+                              {selected === g.id && (g.tests?.length ?? 0) > 0 && (
+                                <select
+                                  className="qa-test-select"
+                                  aria-label={q.chooseTest}
+                                  value={selectedTest}
+                                  onChange={(e) => setSelectedTest(e.target.value)}
+                                >
+                                  <option value="">{q.allTests(g.tests!.length)}</option>
+                                  {testsByContext(g.tests!).map((ctx) => (
+                                    <optgroup key={ctx.context} label={ctx.context}>
+                                      {ctx.tests.map((t) => (
+                                        <option key={t.id} value={t.id}>
+                                          {t.title}
+                                        </option>
+                                      ))}
+                                    </optgroup>
+                                  ))}
+                                </select>
+                              )}
                             </span>
                           </label>
                         ))}
@@ -321,7 +346,9 @@ export default function QaLab() {
                         ? q.runStarting
                         : phase === "running"
                           ? q.runRunning
-                          : q.runIdle}
+                          : selectedTest
+                            ? q.runOne
+                            : q.runIdle}
                     </button>
                     {latest?.finishedAt && phase === "idle" && (
                       <span className="qa-latest">
